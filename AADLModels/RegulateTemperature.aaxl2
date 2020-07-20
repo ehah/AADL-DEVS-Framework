@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<aadl2:Package xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aadl2="http://aadl.info/AADL/2.0" 
+xmlns:devs="http://www.osate.org/xtext/aadl2/devs/Devs" name="RegulateTemperature" publicSection="#//@ownedPublicSection">
+  <ownedComment body="----A.5.1. Regulate Temperature Function--------"/>
+  <ownedComment body="-- 1. Manage Regulator Interface [1.1. manage_status, 1.2. manage_display_temperature, 1.3. manage_regulator_interface_failure"/>
+  <ownedComment body="-- 2. Manage Regulator Mode"/>
+  <ownedComment body="-- 3. Manage Heat Course"/>
+  <ownedComment body="-- 4. Detect Regulator Failure"/>
+  <ownedPublicSection importedUnit="aadl2:Package Iso_Types.aadl#Iso_Types aadl2:Package ../Plugin_Resources/Base_Types.aadl#Base_Types aadl2:PropertySet NewProperties.aadl#NewProperties">
+    <ownedClassifier xsi:type="aadl2:ThreadGroupType" name="manage_regulator_interface">
+      <ownedComment body="---------A.5.1.1 Manage Regulator Interface Function------"/>
+      <ownedDataPort name="lower_desired_temperature" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.lower_desired_temperature"/>
+      <ownedDataPort name="upper_desired_temperature" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.upper_desired_temperature"/>
+      <ownedDataPort name="current_temperature" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.temperature"/>
+      <ownedDataPort name="regulator_mode" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.regulator_mode"/>
+      <ownedDataPort name="regulator_status" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.status"/>
+      <ownedDataPort name="display_temperature" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.temperature"/>
+      <ownedDataPort name="unspecified_temp" out="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+      <ownedDataPort name="regulator_interface_failure" out="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+      <ownedDataPort name="lower_desired_temp" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.lower_desired_temp"/>
+      <ownedDataPort name="upper_desired_temp" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.upper_desired_temp"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadGroupImplementation" name="manage_regulator_interface.impl">
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.0"/>
+      <ownedPortConnection name="EIC1">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.0"/>
+        <source connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.3"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EOC2">
+        <destination connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.4"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.0" connectionEnd="#//@ownedPublicSection/@ownedClassifier.2/@ownedDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EIC3">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.0"/>
+        <source connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.3"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EIC4">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.2"/>
+        <source connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.2"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EOC5">
+        <destination connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.5"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EOC6">
+        <destination connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.6"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.1" connectionEnd="#//@ownedPublicSection/@ownedClassifier.4/@ownedDataPort.3"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EIC5">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.0"/>
+        <source connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.0"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EIC6">
+        <destination context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.1"/>
+        <source connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.1"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EOC7">
+        <destination connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.8"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.3"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EOC8">
+        <destination connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.9"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.4"/>
+      </ownedPortConnection>
+      <ownedPortConnection name="EOC9">
+        <destination connectionEnd="#//@ownedPublicSection/@ownedClassifier.0/@ownedDataPort.7"/>
+        <source context="#//@ownedPublicSection/@ownedClassifier.1/@ownedThreadSubcomponent.2" connectionEnd="#//@ownedPublicSection/@ownedClassifier.6/@ownedDataPort.2"/>
+      </ownedPortConnection>
+      <ownedThreadSubcomponent name="manage_status" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.3"/>
+      <ownedThreadSubcomponent name="manage_display_temperature" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.5"/>
+      <ownedThreadSubcomponent name="manage_interface_failure" threadSubcomponentType="#//@ownedPublicSection/@ownedClassifier.7"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="manage_status">
+      <ownedComment body="------Management regulator status-----   "/>
+      <ownedComment body="--REQ-MRI-1, REQ-MRI-2, REQ-MRI-3 "/>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Period">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:PropertyConstant Iso_Constants.aadl#Iso_Constants.ThreadPeriod"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedDataPort name="regulator_mode" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.regulator_mode"/>
+      <ownedDataPort name="regulator_status" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.status"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadImplementation" name="manage_status.impl">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="devs" sourceText="{** &#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;//entities &#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;variables&#xD;&#xA;&#x9;&#x9; rm : Iso_Types::regulator_mode;   //Regulator Mode&#xD;&#xA;&#x9;&#x9; rt : Iso_Constants::max_operator_response_time;  // Max Operator Response Time&#xD;&#xA;&#x9;&#x9; pd : Iso_Constants::ThreadPeriod;  &#xD;&#xA;&#x9;&#x9; rs : Iso_Types::status;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;states&#xD;&#xA;&#x9;&#x9; Start: initial  0.0;&#xD;&#xA;&#x9;&#x9; Chk_Mode: pd; // we can add the on dispatch&#xD;&#xA;&#x9;&#x9; Set_Vars: 0.0;  // for output, as no direct output from external events&#xD;&#xA;&#x9;&#x9;// Failed: infinity;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;behavior&#xD;&#xA;&#x9;&#x9; deltint  [ Start ]-> Chk_Mode {} ;&#x9;&#xD;&#xA;&#x9;&#x9; deltext  [Chk_Mode, regulator_mode?rm]-> Chk_Mode {&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;&quot;if(rm == INIT) {rs=Init;}&#xD;&#xA;&#x9;&#x9;&#x9;  else if(rm == NORMAL )   {rs=On;}&#xD;&#xA;&#x9;&#x9;&#x9;  else if(rm == FAILED) {rs=Failed;} &#xD;&#xA;&#x9;&#x9;&#x9;Continue; &quot;      //continue with sigma&#xD;&#xA;&#x9;&#x9;    };   // support gaurd conditions &#xD;&#xA;&#x9;&#x9;deltint [Chk_Mode]-> Set_Vars{};   // support gaurd conditions &#xD;&#xA;&#x9;&#x9;outfn   [Set_Vars]-> regulator_status!rs {};&#xD;&#xA;&#x9;&#x9;deltint [Set_Vars]-> Chk_Mode{};  // support gaurd conditions &#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;//deltint [Chk_Mode]-> Failed {&quot;rs:=Failed;&quot;};    // if the there is timeout due to max operator response time&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;**}">
+        <parsedAnnexSubclause xsi:type="devs:DevsAnnexSubclause" name="devs">
+          <ownedComment body="// support gaurd conditions "/>
+          <ownedComment body="//deltint [Chk_Mode]-> Failed {&quot;rs:=Failed;&quot;};    // if the there is timeout due to max operator response time"/>
+          <var>
+            <variable>
+              <var name="rm"/>
+            </variable>
+            <variable>
+              <var name="rt"/>
+            </variable>
+            <variable>
+              <var name="pd"/>
+            </variable>
+            <variable>
+              <var name="rs"/>
+            </variable>
+          </var>
+          <sta>
+            <stas>
+              <state name="Start"/>
+              <timeadv tav="0.0"/>
+            </stas>
+            <stas>
+              <state name="Chk_Mode"/>
+              <timeadv/>
+            </stas>
+            <stas>
+              <state name="Set_Vars"/>
+              <timeadv tav="0.0"/>
+            </stas>
+          </sta>
+          <beh>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltext>
+                <msg direction="?"/>
+                <ba>
+                  <code str="if(rm == INIT) {rs=Init;}&#xD;&#xA;&#x9;&#x9;&#x9;  else if(rm == NORMAL )   {rs=On;}&#xD;&#xA;&#x9;&#x9;&#x9;  else if(rm == FAILED) {rs=Failed;} &#xD;&#xA;&#x9;&#x9;&#x9;Continue; "/>
+                </ba>
+              </deltext>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+            <atomicbehavior>
+              <outfn>
+                <msg direction="!"/>
+              </outfn>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+          </beh>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.2"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="manage_display_temperature">
+      <ownedComment body="------Management Display Temperature-----   "/>
+      <ownedComment body="--REQ-MRI-4, REQ-MRI-5"/>
+      <ownedDataPort name="regulator_mode" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.regulator_mode"/>
+      <ownedDataPort name="display_temperature" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.temperature"/>
+      <ownedDataPort name="current_temperature" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.temperature"/>
+      <ownedDataPort name="unspecified_temp" out="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadImplementation" name="manage_display_temperature.impl">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="devs" sourceText="{**&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;//entities&#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;variables&#xD;&#xA;&#x9;&#x9; rm : Iso_Types::regulator_mode;   //regulator mode&#xD;&#xA;&#x9;&#x9; ct : Base_Types::Integer; // current temperature&#xD;&#xA;&#x9;&#x9; dt : Iso_Types::temperature; // display temperature&#xD;&#xA;&#x9;&#x9; ut : Base_Types::Boolean; // unspecified temperature &#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;states&#xD;&#xA;&#x9;&#x9; Start: initial  0.0;&#xD;&#xA;&#x9;&#x9; Chk_Mode: pd; // we can add the on dispatch&#xD;&#xA;&#x9;&#x9; Set_Vars: 0.0;  // for output, as no direct output from external events&#xD;&#xA;&#x9;//&#x9; Failed: infinity; &#xD;&#xA;&#x9;&#x9; &#xD;&#xA;&#x9;&#x9;behavior&#xD;&#xA;&#x9;&#x9;  deltint  [ Start ]-> Chk_Mode {} ;&#x9;&#xD;&#xA;&#x9;&#x9;  deltext  [Chk_Mode, regulator_mode?rm]-> Chk_Mode {};&#xD;&#xA;&#x9;&#x9;  deltext  [Chk_Mode, current_temperature?ct]-> Chk_Mode {   &#xD;&#xA;&#x9;&#x9;   &#xD;&#xA;&#x9;&#x9;    &quot;if(rm == NORMAL) {dt=ct.t; ut=false;}&#xD;&#xA;&#x9;&#x9;&#x9;  else if(rm == INIT || rm == FAILED)   {dt=0; ut=true;}&#xD;&#xA;&#x9;&#x9;&#x9; Continue; &quot;      //continue with sigma&#xD;&#xA;&#x9;&#x9;    }; &#xD;&#xA;&#x9;&#x9;   &#xD;&#xA;&#x9;&#x9;   outfn   [Set_Vars]-> display_temperature!dt {};&#xD;&#xA;&#x9;&#x9;   outfn   [Set_Vars]-> unspecified_temp!ut {};&#xD;&#xA;&#x9;&#x9;   deltint [Chk_Mode]-> Set_Vars {};&#xD;&#xA;&#x9;&#x9;   deltint [Set_Vars]-> Chk_Mode {};&#xD;&#xA;&#x9;**}">
+        <parsedAnnexSubclause xsi:type="devs:DevsAnnexSubclause" name="devs">
+          <var>
+            <variable>
+              <var name="rm"/>
+            </variable>
+            <variable>
+              <var name="ct"/>
+            </variable>
+            <variable>
+              <var name="dt"/>
+            </variable>
+            <variable>
+              <var name="ut"/>
+            </variable>
+          </var>
+          <sta>
+            <stas>
+              <state name="Start"/>
+              <timeadv tav="0.0"/>
+            </stas>
+            <stas>
+              <state name="Chk_Mode"/>
+              <timeadv/>
+            </stas>
+            <stas>
+              <state name="Set_Vars"/>
+              <timeadv tav="0.0"/>
+            </stas>
+          </sta>
+          <beh>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltext>
+                <msg direction="?"/>
+              </deltext>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltext>
+                <msg direction="?"/>
+                <ba>
+                  <code str="if(rm == NORMAL) {dt=ct.t; ut=false;}&#xD;&#xA;&#x9;&#x9;&#x9;  else if(rm == INIT || rm == FAILED)   {dt=0; ut=true;}&#xD;&#xA;&#x9;&#x9;&#x9; Continue; "/>
+                </ba>
+              </deltext>
+            </atomicbehavior>
+            <atomicbehavior>
+              <outfn>
+                <msg direction="!"/>
+              </outfn>
+            </atomicbehavior>
+            <atomicbehavior>
+              <outfn>
+                <msg direction="!"/>
+              </outfn>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+          </beh>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.4"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadType" name="manage_interface_failure">
+      <ownedComment body="------Management of Regulator Failure-----"/>
+      <ownedComment body="---REQ-MRI-6, REQ-MRI-7   "/>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Thread_Properties.aadl#Thread_Properties.Dispatch_Protocol">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:EnumerationLiteral ../Plugin_Resources/Predeclared_Property_Sets/AADL_Project.aadl#//@ownedPropertyType.3/@ownedLiteral.0"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedPropertyAssociation property="../Plugin_Resources/Predeclared_Property_Sets/Timing_Properties.aadl#Timing_Properties.Period">
+        <ownedValue>
+          <ownedValue xsi:type="aadl2:NamedValue" namedValue="aadl2:PropertyConstant Iso_Constants.aadl#Iso_Constants.ThreadPeriod"/>
+        </ownedValue>
+      </ownedPropertyAssociation>
+      <ownedDataPort name="lower_desired_temperature" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.lower_desired_temperature"/>
+      <ownedDataPort name="upper_desired_temperature" in="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.upper_desired_temperature"/>
+      <ownedDataPort name="regulator_interface_failure" out="true" dataFeatureClassifier="aadl2:DataType ../Plugin_Resources/Base_Types.aadl#Base_Types.Boolean"/>
+      <ownedDataPort name="lower_desired_temp" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.lower_desired_temp"/>
+      <ownedDataPort name="upper_desired_temp" out="true" dataFeatureClassifier="aadl2:DataType Iso_Types.aadl#Iso_Types.upper_desired_temp"/>
+    </ownedClassifier>
+    <ownedClassifier xsi:type="aadl2:ThreadImplementation" name="manage_interface_failure.impl">
+      <ownedAnnexSubclause xsi:type="aadl2:DefaultAnnexSubclause" name="devs" sourceText="{**&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;//entities&#xD;&#xA;&#x9;&#x9;&#x9;variables&#xD;&#xA;&#x9;&#x9;&#x9;  status: Iso_Types::valid_flag;&#xD;&#xA;&#x9;&#x9;&#x9;  ldt: Iso_Types::lower_desired_temperature;&#xD;&#xA;&#x9;&#x9;&#x9;  udt: Iso_Types::uppper_desired_temperature;&#xD;&#xA;&#x9;&#x9;&#x9;  rif: Base_Types::Boolean;&#xD;&#xA;&#x9;&#x9;&#x9;  pd : Iso_Constants::ThreadPeriod;  &#xD;&#xA;&#x9;&#x9;&#x9;  lower_desired_temp : Iso_Types::lower_desired_temp;  // REQ-MRI-8, REQ-MRI-9, is a global variable for manage_regulator_interface&#xD;&#xA;&#x9;&#x9;&#x9;  upper_desired_temp : Iso_Types::upper_desired_temp;   &#xD;&#xA;&#x9;&#x9;&#x9;states&#xD;&#xA;&#x9;&#x9;&#x9;  Start: initial infinity;&#xD;&#xA;&#x9;&#x9;&#x9;  Chk_Status: pd;&#xD;&#xA;&#x9;&#x9;&#x9;  Set_Vars: 0.0;  // for output, as no direct output from external events&#xD;&#xA;&#x9;&#x9;   //   Failed: infinity;&#xD;&#xA;&#x9;&#x9;&#x9;&#xD;&#xA;&#x9;&#x9;&#x9;Behavior&#xD;&#xA;&#x9;&#x9;&#x9;  deltint  [ Start ]-> Chk_Status {} ;&#x9;&#xD;&#xA;&#x9;&#x9;  &#x9;  deltext  [Chk_Status, lower_desired_temperature?ldt]-> Set_Vars {&#xD;&#xA;&#x9;&#x9;  &#x9;  &#xD;&#xA;&#x9;&#x9;  &#x9;   &quot;if(ldt.status == INVALID || udt.status == INVALID) {rif=True;}&#xD;&#xA;&#x9;&#x9;&#x9;      else {rif=False; lower_desired_temp.t = ldt.t  }&#xD;&#xA;&#x9;&#x9;&#x9;      Continue; &quot;      //continue with sigma&#xD;&#xA;&#x9;&#x9;   &#x9;  };&#xD;&#xA;&#x9;&#x9;  &#x9;  &#xD;&#xA;&#x9;&#x9;  &#x9; deltext  [Chk_Status, upper_desired_temperature?udt]-> Set_Vars {&#xD;&#xA;&#x9;&#x9;  &#x9;  &#xD;&#xA;&#x9;&#x9;  &#x9;   &quot;if(udt.status == INVALID || ldt.status == INVALID) {rif=True;}&#xD;&#xA;&#x9;&#x9;&#x9;      else {rif=False; upper_desired_temp.t = udt.t }&#xD;&#xA;&#x9;&#x9;&#x9;      Continue; &quot;      //continue with sigma&#xD;&#xA;&#x9;&#x9;   &#x9;  };&#xD;&#xA;&#x9;&#x9;  &#x9; &#xD;&#xA;&#x9;&#x9;   &#x9; deltint [Set_Vars]-> Chk_Status {}; &#x9;   &#xD;&#xA;&#x9;&#x9;  &#x9; outfn   [Set_Vars]-> regulator_interface_failure!rif {};&#xD;&#xA;&#x9;&#x9;   &#x9; &#xD;&#xA;&#x9;&#x9;&#xD;&#xA;&#x9;**}">
+        <parsedAnnexSubclause xsi:type="devs:DevsAnnexSubclause" name="devs">
+          <var>
+            <variable>
+              <var name="status"/>
+            </variable>
+            <variable>
+              <var name="ldt"/>
+            </variable>
+            <variable>
+              <var name="udt"/>
+            </variable>
+            <variable>
+              <var name="rif"/>
+            </variable>
+            <variable>
+              <var name="pd"/>
+            </variable>
+            <variable>
+              <var name="lower_desired_temp"/>
+            </variable>
+            <variable>
+              <var name="upper_desired_temp"/>
+            </variable>
+          </var>
+          <sta>
+            <stas>
+              <state name="Start"/>
+              <timeadv inf="infinity"/>
+            </stas>
+            <stas>
+              <state name="Chk_Status"/>
+              <timeadv/>
+            </stas>
+            <stas>
+              <state name="Set_Vars"/>
+              <timeadv tav="0.0"/>
+            </stas>
+          </sta>
+          <beh>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltext>
+                <msg direction="?"/>
+                <ba>
+                  <code str="if(ldt.status == INVALID || udt.status == INVALID) {rif=True;}&#xD;&#xA;&#x9;&#x9;&#x9;      else {rif=False; lower_desired_temp.t = ldt.t  }&#xD;&#xA;&#x9;&#x9;&#x9;      Continue; "/>
+                </ba>
+              </deltext>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltext>
+                <msg direction="?"/>
+                <ba>
+                  <code str="if(udt.status == INVALID || ldt.status == INVALID) {rif=True;}&#xD;&#xA;&#x9;&#x9;&#x9;      else {rif=False; upper_desired_temp.t = udt.t }&#xD;&#xA;&#x9;&#x9;&#x9;      Continue; "/>
+                </ba>
+              </deltext>
+            </atomicbehavior>
+            <atomicbehavior>
+              <deltint/>
+            </atomicbehavior>
+            <atomicbehavior>
+              <outfn>
+                <msg direction="!"/>
+              </outfn>
+            </atomicbehavior>
+          </beh>
+        </parsedAnnexSubclause>
+      </ownedAnnexSubclause>
+      <ownedRealization implemented="#//@ownedPublicSection/@ownedClassifier.6"/>
+    </ownedClassifier>
+  </ownedPublicSection>
+</aadl2:Package>

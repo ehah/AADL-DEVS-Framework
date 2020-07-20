@@ -1,0 +1,9 @@
+property set Iso_Constants is
+	ThreadPeriod : constant 
+	Time => 100 ms;
+	
+-----Table A-8. Manage Regulator Interface Function Constants------
+	max_operator_response_time :  constant
+	Time => 500 ms;
+----Table 
+end Iso_Constants;

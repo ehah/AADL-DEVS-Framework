@@ -1,0 +1,204 @@
+package Iso_Types
+public
+	with Base_Types, Data_Model;
+	
+	-----Table A-8. Manage Regulator Interface Function Constants------
+data thread_period 
+	
+end thread_period;
+
+data Bool
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Boolean));
+end Bool;
+----Table 
+	
+data unspecified_value
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::String));
+end unspecified_value;
+	
+
+------Table A-3. Thermostat Monitored Variables for Temperature Sensor-------- 
+
+--Monitored Temperature range
+data measured_temperature_range
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Float)); 
+		Data_Model::Real_Range => 68.0 .. 105.0;
+		Data_Model::Measurement_Unit => "Fahrenheit";		
+end measured_temperature_range;
+	
+--Valid/Invalid enumerated type
+
+data valid_flag
+	properties
+		Data_Model::Data_Representation => Enum;
+		Data_Model::Enumerators => ("Invalid","Valid");
+end valid_flag;
+
+--Current Temperature, "t" is temperature range,  "status" is valid/invalid flag
+data current_temperature
+	properties
+		Data_Model::Data_Representation => Struct;
+		Data_Model::Element_Names => ("t","status");
+		Data_Model::Base_Type => (classifier (Iso_Types::measured_temperature_range), 
+								  classifier (Iso_Types::valid_flag));
+end current_temperature;
+
+
+------Table A-4. Thermostat Controlled Variables for Heat Source 
+
+--for heat control and alarm value
+data on_off
+	properties
+		Data_Model::Data_Representation => Enum;
+		Data_Model::Enumerators => ("off", "on");
+end on_off;
+
+
+
+
+--Table A-5 Thermostat Monitored Variables for Operator Interface
+--lower desired temperature range
+data lower_desired_range
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Integer_Range => 97 .. 99;
+		Data_Model::Measurement_Unit => "Fehrenheit";
+end lower_desired_range;
+
+--Lower Desired Temperature, "t" is temperature range, "status" is the valid/invalid flag
+data lower_desired_temperature
+	properties
+		Data_Model::Data_Representation => Struct;
+		Data_Model::Element_Names => ("t", "status");
+		Data_Model::Base_Type => (classifier (Iso_Types::lower_desired_range), 
+								classifier(Iso_Types::valid_flag));
+end lower_desired_temperature;
+
+--upper desired temperature range
+data upper_desired_range  
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Integer_Range => 98 .. 100;
+		Data_Model::Measurement_Unit => "Fahrenheit";
+end upper_desired_range;
+
+--Upper Desired Temperature, "t" is the tempertuare range, "status" is valid flag
+data upper_desired_temperature
+	properties
+		Data_Model::Data_Representation => Struct;
+		Data_Model::Element_Names => ("t", "status");
+		Data_Model::Base_Type => (classifier(Iso_Types::upper_desired_range),
+			classifier(Iso_Types::valid_flag));
+end upper_desired_temperature;
+
+
+--lower alarm temperature range
+data lower_alarm_range
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Real_Range => 93.0 .. 98.0;
+		Data_Model::Measurement_Unit => "Fahrenheit";
+end lower_alarm_range;
+
+--Lower Alarm Temperature, "t" is temperature, "status" is the valid flag
+data lower_alarm_temperature
+	properties
+		Data_Model::Data_Representation => Struct;
+		Data_Model::Element_Names => ("t","status");
+		Data_Model::Base_Type => (classifier(Iso_Types::lower_alarm_range),
+						classifier(Iso_Types::valid_flag));
+end lower_alarm_temperature;
+
+--upper alarm temperature range
+data upper_alarm_range
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Real_Range => 99.0 .. 103.0;
+		Data_Model::Measurement_Unit => "Fahrenheit";
+end upper_alarm_range;
+
+--Upper Alarm Temperature, "t" is temperature, "status" is the valid flag
+data upper_alarm_temperature
+	properties
+		Data_Model::Data_Representation => Struct;
+		Data_Model::Element_Names => ("t","status");
+		Data_Model::Base_Type => (classifier(Iso_Types::upper_alarm_range),
+						classifier(Iso_Types::valid_flag));
+end upper_alarm_temperature;
+
+---------------Table A-6. Thermostat Controlled Variables for Operator Interface------------
+--For Regulator and Monitor Status
+data regulator_status
+	properties
+		Data_Model::Data_Representation => Enum;
+		Data_Model::Enumerators => ("Init", "On", "Failed");
+end regulator_status;
+
+--For Display Temperature
+data display_temperature_br
+	properties
+		Data_Model::Data_Representation => Struct;
+		Data_Model::Element_Names => ("t", "status");
+		Data_Model::Base_Type => (classifier (Iso_Types::display_temperature_range_br), 
+								classifier(Iso_Types::valid_flag));
+end display_temperature_br;
+
+--Display Temperature range
+data display_temperature_range_br
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Integer_Range => 68 .. 105;
+		Data_Model::Measurement_Unit => "Fahrenheit";
+end display_temperature_range_br;
+
+
+--Display Temperature range
+data display_temperature
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Integer_Range => 68 .. 105;
+		Data_Model::Measurement_Unit => "Fahrenheit";
+end display_temperature;
+
+-------------------Table A-7. The Regulate Temperature Internal Variables--------------
+--Regulator Lower Desired Temp
+data lower_desired_temp
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Integer_Range => 96 .. 101;
+		Data_Model::Measurement_Unit => "Fahrenheit";		
+end lower_desired_temp;
+
+--Regulator  Upper Desired Temp
+data upper_desired_temp
+	properties
+		Data_Model::Base_Type => (classifier(Base_Types::Integer));
+		Data_Model::Integer_Range => 97 .. 102;
+		Data_Model::Measurement_Unit => "Fahrenheit";		
+end upper_desired_temp;	
+
+--Desired Range "l" is lower bound, "u" is upper bound
+data desired_range
+  properties
+  Data_Model::Data_Representation => Struct;
+  Data_Model::Element_Names => ("l","u");
+  Data_Model::Base_Type => (classifier (Iso_Types::lower_desired_temp), 
+  	classifier (Iso_Types::upper_desired_temp));
+end desired_range;
+
+--Regulator Interface Failure
+ --can be directly specified  as Base_Types::Boolean
+--Regulator Internal failure
+ --can be directly specified  as Base_Types::Boolean
+
+
+--Regulator Mode
+data regulator_mode
+	properties
+		Data_Model::Data_Representation => Enum;
+		Data_Model::Enumerators => ("Init", "NORMAL", "FAILED");
+end regulator_mode;
+end Iso_Types;

@@ -1,0 +1,267 @@
+----A.5.1. Regulate Temperature Function--------
+-- 1. Manage Regulator Interface [1.1. manage_status, 1.2. manage_display_temperature, 1.3. manage_regulator_interface_failure
+-- 2. Manage Regulator Mode
+-- 3. Manage Heat Course
+-- 4. Detect Regulator Failure
+package RegulateTemperature
+public
+	with Iso_Types, Base_Types;
+
+---------A.5.1.1 Manage Regulator Interface Function------
+
+thread group manage_regulator_interface
+features
+		lower_desired_temperature : in data port Iso_Types::lower_desired_temperature;
+		upper_desired_temperature : in data port Iso_Types::upper_desired_temperature;
+		current_temperature :  in  data port Iso_Types::current_temperature;
+		regulator_mode : in data port Iso_Types::regulator_mode;
+		regulator_status : out data port Iso_Types::regulator_status;
+		display_temperature : out data port Iso_Types::display_temperature;
+		unspecified_temp : out data port Iso_Types::unspecified_value;
+		regulator_interface_failure : out data port Base_Types::Boolean;
+		
+		lower_desired_temp : out data port Iso_Types::lower_desired_temp;
+		upper_desired_temp : out data port Iso_Types::upper_desired_temp;
+		
+	end manage_regulator_interface;
+
+thread group implementation manage_regulator_interface.impl
+	
+	subcomponents
+		manage_status : thread manage_status.impl;
+		manage_display_temperature: thread manage_display_temperature.impl;
+		manage_interface_failure: thread manage_interfaceFailure_desiredRange.impl;
+	
+	connections
+		EIC1 : port regulator_mode -> manage_status.regulator_mode;  
+		EOC2 : port manage_status.regulator_status -> regulator_status; 
+		
+		EIC3 : port regulator_mode -> manage_display_temperature.regulator_mode;
+		EIC4 : port current_temperature -> manage_display_temperature.current_temperature;
+		EOC5 : port manage_display_temperature.display_temperature -> display_temperature;
+		EOC6 : port manage_display_temperature.unspecified_temp -> unspecified_temp;
+		
+		EIC5 : port lower_desired_temperature -> manage_interface_failure.lower_desired_temperature;
+		EIC6 : port upper_desired_temperature -> manage_interface_failure.upper_desired_temperature;
+		EOC7 : port manage_interface_failure.lower_desired_temp -> lower_desired_temp;
+		EOC8 : port manage_interface_failure.upper_desired_temp -> upper_desired_temp;
+		EOC9 : port manage_interface_failure.regulator_interface_failure -> regulator_interface_failure;
+		
+
+end manage_regulator_interface.impl;
+
+
+
+------Management regulator status-----   
+--REQ-MRI-1, REQ-MRI-2, REQ-MRI-3 
+thread manage_status
+	features
+		regulator_mode: in data port Iso_Types::regulator_mode;
+		regulator_status: out data port Iso_Types::regulator_status;
+	properties
+		Dispatch_protocol => Periodic;
+		Period => 100 ms;-- Iso_Types::Thread_Period;
+		
+end manage_status;
+
+thread implementation manage_status.impl
+	annex devs{** 
+		
+		entities 
+		 stringEnt rm;
+		 stringEnt rs; 
+		
+		variables
+		 rgm : Iso_Types::regulator_mode => "INIT";   //Regulator Mode
+		  pd : Base_Types::Float => 100.0;   
+		 rgs : Iso_Types::regulator_status => "Init";
+		
+		states
+		 Start: initial  0.0;
+		 Chk_Mode: pd; 
+		 Set_Vars: 0.0;  
+				
+		behavior
+		 deltint [ Start ]-> Chk_Mode {} ;	
+		 deltint [Chk_Mode]-> Set_Vars{};
+		 deltint [Set_Vars]-> Chk_Mode{}; 
+		 
+		 deltext  [Chk_Mode, regulator_mode?rgm]-> Set_Vars {
+			
+			"if(rgm.getv() == \"INIT\") {rgs.setv(Init);}
+			  else if(rgm.getv() == \"NORMAL\" )   
+			  {rgs.setv(On);}
+			  else if(rgm.getv() == \"FAILED\") 
+			  {rgs.setv(Failed);} 
+			"      
+		    };   // support gaurd conditions 
+		
+		outfn   [Set_Vars]-> regulator_status!rgs {};
+				 
+		infn [regulator_mode,  "NORMAL"];
+		infn [regulator_mode,  "INIT"];
+		infn [regulator_mode,  "FAILED"];
+		  
+		
+		//deltint [Chk_Mode]-> Failed {"rs:=Failed;"};    // if the there is timeout due to max operator response time
+		
+	**};
+end manage_status.impl;
+	
+------Management Display Temperature-----   
+--REQ-MRI-4, REQ-MRI-5
+
+thread manage_display_temperature
+	features
+		regulator_mode: in data port Iso_Types::regulator_mode;
+		current_temperature: in data port Iso_Types::current_temperature;
+		display_temperature: out data port Iso_Types::display_temperature;
+		unspecified_temp : out data port Iso_Types::unspecified_value;
+	properties
+		Dispatch_protocol => Periodic;
+		Period => 100 ms;-- Iso_Types::Thread_Period;
+end manage_display_temperature;
+
+thread implementation manage_display_temperature.impl
+	annex devs {**
+			
+		entities
+		 stringEnt rm;
+		 stringEnt dt;   
+		
+		variables
+		 rgm : Iso_Types::regulator_mode => "INIT" ;   //regulator mode
+		 crt : Iso_Types::current_temperature => (68.0, "Valid"); // current temperature
+		 ust : Iso_Types::Bool => false;	
+		 pd : Base_Types::Float => 100.0; 
+		 unspecified_value : Iso_Types::unspecified_value => "unspecified_value";
+		 
+		states
+		 Start: initial  0.0;
+		 Chk_Mode: pd; // we can add the on dispatch
+		 Set_Vars: 0.0;  // for output, as no direct output from external events
+	//	 Failed: infinity; 
+		 
+		behavior
+		  deltint  [ Start ]-> Chk_Mode {} ;	
+		  deltext  [Chk_Mode, regulator_mode?rgm]-> Chk_Mode {};
+		  deltext  [Chk_Mode, current_temperature?crt]-> Set_Vars {   
+		   
+		    "if(rgm.getv() == \"NORMAL\") 
+		    	{ust.setv(false);}
+			 else if(rgm.getv() == \"INIT\" || rgm.getv() == \"FAILED\")   
+			 	{ust.setv(true);}
+			"    
+		    }; 
+		   
+		  
+		  deltint [Chk_Mode]-> Set_Vars {};
+		  deltint [Set_Vars]-> Chk_Mode {};
+		  
+		  outfn [Set_Vars,  (ust != true)]-> display_temperature!crt.t {};
+		  outfn [Set_Vars,  (ust == true)]-> unspecified_temp!unspecified_value {};
+		  
+		   //compound value example  
+		   //- check them all
+		  	 infn [regulator_mode,  "NORMAL"];
+		  	 infn [regulator_mode,  "INIT"];
+		  	 infn [regulator_mode,  "FAILED"];
+		  	 infn [current_temperature, (102, "Valid")];		  	 
+		  	
+					
+**};
+	
+end manage_display_temperature.impl;
+
+------Management of Regulator Failure-----
+---REQ-MRI-6, REQ-MRI-7   
+thread manage_interfaceFailure_desiredRange
+	features
+		lower_desired_temperature : in data port Iso_Types::lower_desired_temperature;  
+		upper_desired_temperature : in data port Iso_Types::upper_desired_temperature;	
+		
+		regulator_interface_failure : out data port Base_Types::Boolean;
+		lower_desired_temp :  out data port Iso_Types::lower_desired_temp;
+		upper_desired_temp :  out data port Iso_Types::upper_desired_temp;
+		unspecified_temp : out data port  Iso_Types::unspecified_value;
+	
+	properties
+	   Dispatch_Protocol => Periodic;
+	   Period => 100 ms; --Iso_Constants::ThreadPeriod;
+		
+end manage_interfaceFailure_desiredRange;
+
+thread implementation manage_interfaceFailure_desiredRange.impl
+	
+	annex devs {**
+			
+			entities
+			 doubleEnt ldtX; // ldt = 70.60
+			 doubleEnt udtX;
+			 booleanEnt rifX;
+	
+			variables
+			 dt: Iso_Types::display_temperature => (90);
+			 ldt: Iso_Types::lower_desired_temperature => (98, "Valid");  //Lower Desired Temperature,  Table A-5
+ 			 udt: Iso_Types::upper_desired_temperature => (99, "Valid"); //Upper Desired Temperature, Table A-5
+ 			// status: Iso_Types::valid_flag => "Invalid"; // can be part of the entities , can be 
+ 			 rif: Iso_Types::Bool => true;  
+ 			 pd : Base_Types::Float => 100.0;  
+ 			 unspecified_value: Iso_Types::unspecified_value => "unpecified_value";
+ 			// tlr:Iso_Types::lower_desired_temp => (10034);
+			// tur:Iso_Types::upper_desired_temp => (10089);
+			 			  		  
+			states
+			  Start: initial 0.0;
+			  Chk_Status: pd;
+			  Set_Vars: 0.0;  // for output, as no direct output from external events
+		   //   Failed: infinity;
+			
+			behavior
+			  
+			  deltint  [ Start ]-> Chk_Status {} ;	
+		  	  deltext  [Chk_Status, lower_desired_temperature?ldt]-> Set_Vars {
+		  	  
+		  	   "if(ldt.get_status() == \"Invalid\" || udt.get_status() == \"Invalid\") 
+		  	   		{rif.setv(true);}
+			    else {rif.setv(false);}
+			   "      //continue with sigma
+		   	  };
+		  	  
+		  	 deltext  [Chk_Status, upper_desired_temperature?udt]-> Set_Vars {
+		  	  
+		  	   "if(udt.get_status() == \"Invalid\" || ldt.get_status() == \"Invalid\") 
+		  	   		{rif.setv(true);}
+			    else { rif.setv(false); }
+			    "      //continue with sigma
+		   	  };
+		  	 		   	 deltint [Set_Vars]-> Chk_Status {}; 	   
+		  	
+		  	 outfn [Set_Vars]-> regulator_interface_failure!rif {};
+		  	
+		  	 outfn [Set_Vars,  (rif != true)]-> lower_desired_temp!ldt.t {};
+		  	 
+		  	 outfn [Set_Vars,  (rif != true)]-> upper_desired_temp!udt.t {};  // we are interested in the value of t, while this class min, max, and t
+		  	 
+		  	 outfn [Set_Vars,  (rif == true)]-> unspecified_temp!unspecified_value {};
+		  	
+		 	 //compound value example
+		  	
+		  	 infn [lower_desired_temperature, (97, "Valid")]; 
+		  	 infn [lower_desired_temperature, (100, "Invalid")];
+			 infn [upper_desired_temperature, (101, "Invalid")];
+		  	 infn [upper_desired_temperature, (98, "Valid")]; 
+			 	  	
+			
+			//simple value example
+			 infn [lower_desired_temp, 98];
+			 
+			 infn [regulator_interface_failure, true]; 
+		
+		  	 
+	**};
+end manage_interfaceFailure_desiredRange.impl;
+
+
+
+end RegulateTemperature;
